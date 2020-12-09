@@ -1,0 +1,71 @@
+@model IEnumerable<ProjectMann.Core.Domain.Proyecto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de proyectos</h1>
+
+@if (User.IsInRole("1"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreProyecto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaModificacion)
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
+                Estado
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreProyecto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaModificacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkClienteNavigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkEstadoNavigation.Nombre)
+            </td>
+            <td>
+
+                @if (User.IsInRole("1") || User.IsInRole("2"))
+                {
+                    <a asp-action="Details" asp-route-id="@item.IdProyecto">Details</a> @("|")
+                }
+
+
+                @if (User.IsInRole("1"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.IdProyecto">Edit</a> @("|")
+                    <a asp-action="Delete" asp-route-id="@item.IdProyecto">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,83 @@
+@model IEnumerable<ProjectMann.Core.Domain.Ticket>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Contenido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaModificacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkAsignadoANavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkEstadoNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkPrioridadNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkTipoTicketNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkUsuarioCreaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkUsuarioModificaNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contenido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaModificacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkAsignadoANavigation.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkEstadoNavigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkPrioridadNavigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkTipoTicketNavigation.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkUsuarioCreaNavigation.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkUsuarioModificaNavigation.Apellido)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdTicket">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdTicket">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdTicket">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

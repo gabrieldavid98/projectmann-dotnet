@@ -1,0 +1,43 @@
+@model ProjectMann.Core.Domain.ItemTrabajo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear</h1>
+
+<h4>Item de Trabajo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="FkTipoItemTrabajo" class="control-label">Tipo de item de trabajo</label>
+                <select asp-for="FkTipoItemTrabajo" class ="form-control" asp-items="ViewBag.FkTipoItemTrabajo"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Titulo" class="control-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <textarea asp-for="Descripcion" class="form-control"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="FkAsignadoA" class="control-label">Asignar A</label>
+                <select asp-for="FkAsignadoA" class ="form-control" asp-items="ViewBag.FkAsignadoA"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar</a>
+</div>
+
