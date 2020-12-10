@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMann.Core.Domain;
 using ProjectMann.Infrastructure.Data;
+using ProjectMann.Web.Managers;
 
 namespace ProjectMann.Web.Controllers
 {
@@ -15,16 +16,25 @@ namespace ProjectMann.Web.Controllers
     public class WorkItemController : Controller
     {
         private readonly ProjectMannDbContext _context;
+        private readonly IAuthManager _auth;
 
-        public WorkItemController(ProjectMannDbContext context)
+        public WorkItemController(ProjectMannDbContext context,  IAuthManager auth)
         {
             _context = context;
+            _auth = auth;
         }
 
         // GET: WorkItem
         public async Task<IActionResult> Index()
         {
-            var projectMannDbContext = _context.ItemTrabajos.Include(i => i.FkAsignadoANavigation).Include(i => i.FkEstadoNavigation).Include(i => i.FkTipoItemTrabajoNavigation).Include(i => i.FkUsuarioCreaNavigation).Include(i => i.FkUsuarioModificaNavigation);
+            var projectMannDbContext = _context.ItemTrabajos
+                .Include(i => i.FkAsignadoANavigation)
+                .Include(i => i.FkEstadoNavigation)
+                .Include(i => i.FkTipoItemTrabajoNavigation)
+                .Include(i => i.FkUsuarioCreaNavigation)
+                .Include(i => i.FkUsuarioModificaNavigation)
+                .Where(x => x.FkEstado != 7);
+
             return View(await projectMannDbContext.ToListAsync());
         }
 
@@ -82,6 +92,12 @@ namespace ProjectMann.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                itemTrabajo.FechaCreacion = DateTime.UtcNow.AddHours(-5);
+                itemTrabajo.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                itemTrabajo.FkUsuarioCrea = _auth.GetCurrentUserId(HttpContext); 
+                itemTrabajo.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                itemTrabajo.FkEstado = 1;
+
                 _context.Add(itemTrabajo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -107,7 +123,20 @@ namespace ProjectMann.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkAsignadoA);
+
+            ViewData["FkAsignadoA"] = new SelectList(
+                _context.Usuarios
+                    .Where(u => u.FkRol == 2 && u.Estado == true)
+                    .Select(u => new 
+                    { 
+                        u.IdUsuario, 
+                        Nombre = $"{u.Nombre} {u.Apellido}".Trim()
+                    }), 
+                "IdUsuario", 
+                "Nombre",
+                itemTrabajo.FkAsignadoA
+            );
+
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", itemTrabajo.FkEstado);
             ViewData["FkTipoItemTrabajo"] = new SelectList(_context.TipoItemTrabajos, "IdTipoItemTrabajo", "Nombre", itemTrabajo.FkTipoItemTrabajo);
             ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioCrea);
@@ -131,6 +160,21 @@ namespace ProjectMann.Web.Controllers
             {
                 try
                 {
+                    var itemTrabajoActual = await _context.ItemTrabajos
+                        .Where(x => x.IdItemTrabajo == id)
+                        .Select(x => new { x.FechaCreacion, x.FkUsuarioCrea })
+                        .FirstOrDefaultAsync();
+
+                    if (itemTrabajoActual == null)
+                    {
+                        return NotFound();
+                    }
+
+                    itemTrabajo.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                    itemTrabajo.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                    itemTrabajo.FechaCreacion = itemTrabajoActual.FechaCreacion;
+                    itemTrabajo.FkUsuarioCrea = itemTrabajoActual.FkUsuarioCrea;
+
                     _context.Update(itemTrabajo);
                     await _context.SaveChangesAsync();
                 }
@@ -184,7 +228,10 @@ namespace ProjectMann.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var itemTrabajo = await _context.ItemTrabajos.FindAsync(id);
-            _context.ItemTrabajos.Remove(itemTrabajo);
+            itemTrabajo.FkEstado = 7;
+            itemTrabajo.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+            itemTrabajo.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

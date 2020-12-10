@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdItemTrabajo" />
             <div class="form-group">
-                <label asp-for="FkTipoItemTrabajo" class="control-label"></label>
+                <label for="FkTipoItemTrabajo" class="control-label">Tipo de item de trabajo</label>
                 <select asp-for="FkTipoItemTrabajo" class="form-control" asp-items="ViewBag.FkTipoItemTrabajo"></select>
                 <span asp-validation-for="FkTipoItemTrabajo" class="text-danger"></span>
             </div>
@@ -25,38 +25,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
+                <textarea asp-for="Descripcion" class="form-control"></textarea>
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FkEstado" class="control-label"></label>
+                <label for="FkEstado" class="control-label">Estado</label>
                 <select asp-for="FkEstado" class="form-control" asp-items="ViewBag.FkEstado"></select>
                 <span asp-validation-for="FkEstado" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FkAsignadoA" class="control-label"></label>
+                <label for="FkAsignadoA" class="control-label">Asignado A</label>
                 <select asp-for="FkAsignadoA" class="form-control" asp-items="ViewBag.FkAsignadoA"></select>
                 <span asp-validation-for="FkAsignadoA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
-                <span asp-validation-for="FechaCreacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaModificacion" class="control-label"></label>
-                <input asp-for="FechaModificacion" class="form-control" />
-                <span asp-validation-for="FechaModificacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioModifica" class="control-label"></label>
-                <select asp-for="FkUsuarioModifica" class="form-control" asp-items="ViewBag.FkUsuarioModifica"></select>
-                <span asp-validation-for="FkUsuarioModifica" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioCrea" class="control-label"></label>
-                <select asp-for="FkUsuarioCrea" class="form-control" asp-items="ViewBag.FkUsuarioCrea"></select>
-                <span asp-validation-for="FkUsuarioCrea" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
