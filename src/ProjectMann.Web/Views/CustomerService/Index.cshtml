@@ -4,40 +4,30 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Listado de tickets</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Crear nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                Desarrollador asignado
+            </th>
+
+            <th>
                 @Html.DisplayNameFor(model => model.Contenido)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
+                Estado
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FechaModificacion)
+                Tipo de prioridad
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FkAsignadoANavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkEstadoNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkPrioridadNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkTipoTicketNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkUsuarioCreaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkUsuarioModificaNavigation)
+                Tipo de ticket
             </th>
             <th></th>
         </tr>
@@ -45,17 +35,12 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FkAsignadoANavigation.NombreUsuario)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Contenido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaModificacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FkAsignadoANavigation.Apellido)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FkEstadoNavigation.Nombre)
@@ -67,15 +52,15 @@
                 @Html.DisplayFor(modelItem => item.FkTipoTicketNavigation.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FkUsuarioCreaNavigation.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FkUsuarioModificaNavigation.Apellido)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdTicket">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdTicket">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdTicket">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdTicket">
+                    <input type="button" value="Editar" class="btn btn-primary" />
+                </a>
+                <a asp-action="Details" asp-route-id="@item.IdTicket">
+                    <input type="button" value="Más información" class="btn btn-info" />
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.IdTicket">
+                    <input type="button" value="Eliminar" class="btn btn-danger" />
+                </a>
             </td>
         </tr>
 }

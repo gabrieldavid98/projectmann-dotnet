@@ -11,50 +11,54 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NombreProyecto)
+            Nombre del proyecto: 
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NombreProyecto)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaCreacion)
+        <dt class="col-sm-2">
+            Fecha de creación:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FechaCreacion)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaModificacion)
+        <dt class="col-sm-2">
+            Fecha de modificación:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FechaModificacion)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkClienteNavigation)
+        <dt class="col-sm-2">
+            Nombre del cliente:
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FkClienteNavigation.Celular)
+            @Html.DisplayFor(model => model.FkClienteNavigation.Nombre)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkEstadoNavigation)
+        <dt class="col-sm-2">
+            Estado del proyecto:
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FkEstadoNavigation.Nombre)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkUsuarioCreaNavigation)
+        <dt class="col-sm-2">
+            Usuario que creo el proyecto:
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FkUsuarioCreaNavigation.Apellido)
+            @Html.DisplayFor(model => model.FkUsuarioCreaNavigation.NombreUsuario)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkUsuarioModificaNavigation)
+        <dt class="col-sm-2">
+            Usuario que modifica el proyecto:
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FkUsuarioModificaNavigation.Apellido)
+            @Html.DisplayFor(model => model.FkUsuarioModificaNavigation.NombreUsuario)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.IdProyecto">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.IdProyecto">
+        <input type="button" value="Editar" class="btn btn-primary" />
+    </a>
+    <a asp-action="Index">
+        <input type="button" value="Volver" class="btn btn-secondary" />
+    </a>
 </div>

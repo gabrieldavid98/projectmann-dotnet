@@ -14,58 +14,36 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdTicket" />
             <div class="form-group">
-                <label asp-for="FkAsignadoA" class="control-label"></label>
+                <label asp-for="FkAsignadoA" class="control-label">Desarrollador asignado</label>
                 <select asp-for="FkAsignadoA" class="form-control" asp-items="ViewBag.FkAsignadoA"></select>
                 <span asp-validation-for="FkAsignadoA" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Contenido" class="control-label"></label>
-                <input asp-for="Contenido" class="form-control" />
+                <textarea cols="20" asp-for="Contenido" name="Contenido" rows="2" class="form-control">Contenido</textarea>
                 <span asp-validation-for="Contenido" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FkPrioridad" class="control-label"></label>
+                <label asp-for="FkPrioridad" class="control-label">Tipo de prioridad</label>
                 <select asp-for="FkPrioridad" class="form-control" asp-items="ViewBag.FkPrioridad"></select>
                 <span asp-validation-for="FkPrioridad" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FkEstado" class="control-label"></label>
-                <select asp-for="FkEstado" class="form-control" asp-items="ViewBag.FkEstado"></select>
-                <span asp-validation-for="FkEstado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkTipoTicket" class="control-label"></label>
+                <label asp-for="FkTipoTicket" class="control-label">Tipo de ticket</label>
                 <select asp-for="FkTipoTicket" class="form-control" asp-items="ViewBag.FkTipoTicket"></select>
                 <span asp-validation-for="FkTipoTicket" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
-                <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+                <label asp-for="FkEstado" class="control-label">Estado</label>
+                <select asp-for="FkEstado" class="form-control" asp-items="ViewBag.FkEstado"></select>
+                <span asp-validation-for="FkEstado" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FechaModificacion" class="control-label"></label>
-                <input asp-for="FechaModificacion" class="form-control" />
-                <span asp-validation-for="FechaModificacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioModifica" class="control-label"></label>
-                <select asp-for="FkUsuarioModifica" class="form-control" asp-items="ViewBag.FkUsuarioModifica"></select>
-                <span asp-validation-for="FkUsuarioModifica" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioCrea" class="control-label"></label>
-                <select asp-for="FkUsuarioCrea" class="form-control" asp-items="ViewBag.FkUsuarioCrea"></select>
-                <span asp-validation-for="FkUsuarioCrea" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" /> |
+                <a asp-action="Index">
+                    <input type="button" value="Volver" class="btn btn-secondary" />
+                </a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
