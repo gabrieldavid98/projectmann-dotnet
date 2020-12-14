@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMann.Core.Domain;
 using ProjectMann.Infrastructure.Data;
+using ProjectMann.Web.Managers;
 
 namespace ProjectMann.Web.Controllers
 {
-    [Authorize]
+    [Authorize("AdminAndDev")]
     public class CustomerServiceController : Controller
     {
         private readonly ProjectMannDbContext _context;
+        private readonly IAuthManager _auth;
 
-        public CustomerServiceController(ProjectMannDbContext context)
+        public CustomerServiceController(ProjectMannDbContext context, IAuthManager auth)
         {
             _context = context;
+            _auth = auth;
         }
 
         // GET: CustomerService
@@ -55,12 +58,12 @@ namespace ProjectMann.Web.Controllers
         // GET: CustomerService/Create
         public IActionResult Create()
         {
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario");
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre");
             ViewData["FkPrioridad"] = new SelectList(_context.Prioridads, "IdPrioridad", "Nombre");
             ViewData["FkTipoTicket"] = new SelectList(_context.TipoTickets, "IdTipoTicket", "Nombre");
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario");
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario");
             return View();
         }
 
@@ -73,16 +76,22 @@ namespace ProjectMann.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                ticket.FechaCreacion = DateTime.UtcNow.AddHours(-5);
+                ticket.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                ticket.FkUsuarioCrea = _auth.GetCurrentUserId(HttpContext);
+                ticket.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                ticket.FkEstado = 1;
+
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkAsignadoA);
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkAsignadoA);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", ticket.FkEstado);
             ViewData["FkPrioridad"] = new SelectList(_context.Prioridads, "IdPrioridad", "Nombre", ticket.FkPrioridad);
             ViewData["FkTipoTicket"] = new SelectList(_context.TipoTickets, "IdTipoTicket", "Nombre", ticket.FkTipoTicket);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioModifica);
             return View(ticket);
         }
 
@@ -99,12 +108,12 @@ namespace ProjectMann.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkAsignadoA);
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkAsignadoA);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", ticket.FkEstado);
             ViewData["FkPrioridad"] = new SelectList(_context.Prioridads, "IdPrioridad", "Nombre", ticket.FkPrioridad);
             ViewData["FkTipoTicket"] = new SelectList(_context.TipoTickets, "IdTipoTicket", "Nombre", ticket.FkTipoTicket);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioModifica);
             return View(ticket);
         }
 
@@ -124,6 +133,20 @@ namespace ProjectMann.Web.Controllers
             {
                 try
                 {
+                    var ticketActual = await _context.Tickets
+                        .Where(x => x.IdTicket == id)
+                        .Select(x => new { x.FechaCreacion, x.FkUsuarioCrea })
+                        .FirstOrDefaultAsync();
+
+                    if (ticketActual == null)
+                    {
+                        return NotFound();
+                    }
+
+                    ticket.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                    ticket.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                    ticket.FechaCreacion = ticketActual.FechaCreacion;
+                    ticket.FkUsuarioCrea = ticketActual.FkUsuarioCrea;
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();
                 }
@@ -140,12 +163,12 @@ namespace ProjectMann.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkAsignadoA);
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkAsignadoA);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", ticket.FkEstado);
             ViewData["FkPrioridad"] = new SelectList(_context.Prioridads, "IdPrioridad", "Nombre", ticket.FkPrioridad);
             ViewData["FkTipoTicket"] = new SelectList(_context.TipoTickets, "IdTipoTicket", "Nombre", ticket.FkTipoTicket);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", ticket.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", ticket.FkUsuarioModifica);
             return View(ticket);
         }
 
@@ -179,6 +202,10 @@ namespace ProjectMann.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
+            ticket.FkEstado = 7;
+            ticket.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+            ticket.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

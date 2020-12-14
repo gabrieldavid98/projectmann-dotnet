@@ -4,37 +4,25 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Lista de las licencias de software</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NombreSoftware)
+                Nombre del software
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Licencia)
+                Número de licencia
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Version)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaModificacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkAsignadoANavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkUsuarioCreaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkUsuarioModificaNavigation)
+                Usuario asignado
             </th>
             <th></th>
         </tr>
@@ -52,24 +40,18 @@
                 @Html.DisplayFor(modelItem => item.Version)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
+                @Html.DisplayFor(modelItem => item.FkAsignadoANavigation.NombreUsuario)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaModificacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FkAsignadoANavigation.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FkUsuarioCreaNavigation.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FkUsuarioModificaNavigation.Apellido)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdItemInventario">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdItemInventario">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdItemInventario">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdItemInventario">
+                    <input type="button" value="Editar" class="btn btn-primary" />
+                </a>
+                <a asp-action="Details" asp-route-id="@item.IdItemInventario">
+                    <input type="button" value="Más información" class="btn btn-info" />
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.IdItemInventario">
+                    <input type="button" value="Eliminar" class="btn btn-danger" />
+                </a>
             </td>
         </tr>
 }

@@ -16,14 +16,9 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NombreProyecto)
+                Nombre del proyecto
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaModificacion)
-            </th>
+           
             <th>
                 Cliente
             </th>
@@ -39,12 +34,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NombreProyecto)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaModificacion)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.FkClienteNavigation.Nombre)
             </td>
@@ -55,14 +45,20 @@
 
                 @if (User.IsInRole("1") || User.IsInRole("2"))
                 {
-                    <a asp-action="Details" asp-route-id="@item.IdProyecto">Details</a> @("|")
+                <a asp-action="Details" asp-route-id="@item.IdProyecto">
+                    <input type="button" value="Más información" class="btn btn-info" />
+                </a>
                 }
 
 
                 @if (User.IsInRole("1"))
                 {
-                    <a asp-action="Edit" asp-route-id="@item.IdProyecto">Edit</a> @("|")
-                    <a asp-action="Delete" asp-route-id="@item.IdProyecto">Delete</a>
+            <a asp-action="Edit" asp-route-id="@item.IdProyecto">
+                <input type="button" value="Editar" class="btn btn-primary" />
+            </a>
+            <a asp-action="Delete" asp-route-id="@item.IdProyecto">
+                <input type="button" value="Eliminar" class="btn btn-danger" />
+            </a>
                 }
             </td>
         </tr>

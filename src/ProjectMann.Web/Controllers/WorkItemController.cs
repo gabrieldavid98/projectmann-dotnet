@@ -78,8 +78,8 @@ namespace ProjectMann.Web.Controllers
 
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre");
             ViewData["FkTipoItemTrabajo"] = new SelectList(_context.TipoItemTrabajos, "IdTipoItemTrabajo", "Nombre");
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario");
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario");
             return View();
         }
 
@@ -102,11 +102,11 @@ namespace ProjectMann.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkAsignadoA);
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkAsignadoA);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", itemTrabajo.FkEstado);
             ViewData["FkTipoItemTrabajo"] = new SelectList(_context.TipoItemTrabajos, "IdTipoItemTrabajo", "Nombre", itemTrabajo.FkTipoItemTrabajo);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioModifica);
             return View(itemTrabajo);
         }
 
@@ -139,8 +139,8 @@ namespace ProjectMann.Web.Controllers
 
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", itemTrabajo.FkEstado);
             ViewData["FkTipoItemTrabajo"] = new SelectList(_context.TipoItemTrabajos, "IdTipoItemTrabajo", "Nombre", itemTrabajo.FkTipoItemTrabajo);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioModifica);
             return View(itemTrabajo);
         }
 
@@ -191,11 +191,11 @@ namespace ProjectMann.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkAsignadoA);
+            ViewData["FkAsignadoA"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkAsignadoA);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", itemTrabajo.FkEstado);
             ViewData["FkTipoItemTrabajo"] = new SelectList(_context.TipoItemTrabajos, "IdTipoItemTrabajo", "Nombre", itemTrabajo.FkTipoItemTrabajo);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", itemTrabajo.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", itemTrabajo.FkUsuarioModifica);
             return View(itemTrabajo);
         }
 

@@ -1,37 +1,32 @@
 @model IEnumerable<ProjectMann.Core.Domain.Usuario>
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Index"; }
 
 <h1>Lista de Usuarios</h1>
 
+@if (User.IsInRole("1"))
+{
 <p>
-    <a asp-action="Create">Crear Nuevo</a>
+    <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
 </p>
+}
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                Nombre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Apellido)
+                Apellido
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NombreUsuario)
+                Ususario
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaModificacion)
+                Estado
             </th>
             <th>
                 Rol
@@ -40,7 +35,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+                        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -58,20 +54,26 @@
                 @((item?.Estado ?? false) ? "Activo" : "Inactivo")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaModificacion)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.FkRolNavigation.Nombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdUsuario">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdUsuario">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdUsuario">Delete</a>
+
+                @if (User.IsInRole("1") || User.IsInRole("2"))
+                {
+            <a asp-action="Edit" asp-route-id="@item.IdUsuario">
+                <input type="button" value="Editar" class="btn btn-primary" />
+            </a>                }
+
+                @if (User.IsInRole("1"))
+                {
+            <a asp-action="Details" asp-route-id="@item.IdUsuario">
+                <input type="button" value="Más información" class="btn btn-info" />
+            </a>
+            <a asp-action="Delete" asp-route-id="@item.IdUsuario">
+                <input type="button" value="Eliminar" class="btn btn-danger" />
+            </a>
+                }
             </td>
-        </tr>
-}
+        </tr>}
     </tbody>
 </table>

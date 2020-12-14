@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMann.Core.Domain;
 using ProjectMann.Infrastructure.Data;
+using ProjectMann.Web.Managers;
 
 namespace ProjectMann.Web.Controllers
 {
+    [Authorize("AdminAndDev")]
     public class ProjectController : Controller
     {
         private readonly ProjectMannDbContext _context;
+        private readonly IAuthManager _auth;
 
-        public ProjectController(ProjectMannDbContext context)
+        public ProjectController(ProjectMannDbContext context, IAuthManager auth)
         {
             _context = context;
+            _auth = auth;
         }
 
         [Authorize("AdminAndDev")]
@@ -55,7 +59,7 @@ namespace ProjectMann.Web.Controllers
         // GET: Project/Create
         public IActionResult Create()
         {
-            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Celular");
+            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre");
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre");
             ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
             ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido");
@@ -72,14 +76,20 @@ namespace ProjectMann.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                proyecto.FechaCreacion = DateTime.UtcNow.AddHours(-5);
+                proyecto.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                proyecto.FkUsuarioCrea = _auth.GetCurrentUserId(HttpContext);
+                proyecto.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                proyecto.FkEstado = 1;
+
                 _context.Add(proyecto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Celular", proyecto.FkCliente);
+            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", proyecto.FkCliente);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", proyecto.FkEstado);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioModifica);
             return View(proyecto);
         }
 
@@ -97,10 +107,10 @@ namespace ProjectMann.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Celular", proyecto.FkCliente);
+            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", proyecto.FkCliente);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", proyecto.FkEstado);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioModifica);
             return View(proyecto);
         }
 
@@ -121,6 +131,20 @@ namespace ProjectMann.Web.Controllers
             {
                 try
                 {
+                    var proyectoActual = await _context.Proyectos
+                        .Where(x => x.IdProyecto == id)
+                        .Select(x => new { x.FechaCreacion, x.FkUsuarioCrea })
+                        .FirstOrDefaultAsync();
+
+                    if (proyectoActual == null)
+                    {
+                        return NotFound();
+                    }
+
+                    proyecto.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+                    proyecto.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+                    proyecto.FechaCreacion = proyectoActual.FechaCreacion;
+                    proyecto.FkUsuarioCrea = proyectoActual.FkUsuarioCrea;
                     _context.Update(proyecto);
                     await _context.SaveChangesAsync();
                 }
@@ -137,10 +161,10 @@ namespace ProjectMann.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Celular", proyecto.FkCliente);
+            ViewData["FkCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", proyecto.FkCliente);
             ViewData["FkEstado"] = new SelectList(_context.Estados, "IdEstado", "Nombre", proyecto.FkEstado);
-            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioCrea);
-            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "Apellido", proyecto.FkUsuarioModifica);
+            ViewData["FkUsuarioCrea"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioCrea);
+            ViewData["FkUsuarioModifica"] = new SelectList(_context.Usuarios, "IdUsuario", "NombreUsuario", proyecto.FkUsuarioModifica);
             return View(proyecto);
         }
 
@@ -174,7 +198,10 @@ namespace ProjectMann.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var proyecto = await _context.Proyectos.FindAsync(id);
-            _context.Proyectos.Remove(proyecto);
+            proyecto.FkEstado = 7;
+            proyecto.FechaModificacion = DateTime.UtcNow.AddHours(-5);
+            proyecto.FkUsuarioModifica = _auth.GetCurrentUserId(HttpContext);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

@@ -13,16 +13,16 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FkAsignadoA" class="control-label"></label>
+                <label asp-for="FkAsignadoA" class="control-label">Usuario asignado</label>
                 <select asp-for="FkAsignadoA" class ="form-control" asp-items="ViewBag.FkAsignadoA"></select>
             </div>
             <div class="form-group">
-                <label asp-for="NombreSoftware" class="control-label"></label>
+                <label asp-for="NombreSoftware" class="control-label">Nombre del software</label>
                 <input asp-for="NombreSoftware" class="form-control" />
                 <span asp-validation-for="NombreSoftware" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Licencia" class="control-label"></label>
+                <label asp-for="Licencia" class="control-label">Número de licencia</label>
                 <input asp-for="Licencia" class="form-control" />
                 <span asp-validation-for="Licencia" class="text-danger"></span>
             </div>
@@ -32,26 +32,12 @@
                 <span asp-validation-for="Version" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FechaModificacion" class="control-label"></label>
-                <input asp-for="FechaModificacion" class="form-control" />
-                <span asp-validation-for="FechaModificacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioModifica" class="control-label"></label>
-                <select asp-for="FkUsuarioModifica" class ="form-control" asp-items="ViewBag.FkUsuarioModifica"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FkUsuarioCrea" class="control-label"></label>
-                <select asp-for="FkUsuarioCrea" class ="form-control" asp-items="ViewBag.FkUsuarioCrea"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />|
+                <a asp-action="Index">
+                    <input type="button" value="Volver" class="btn btn-secondary" />
+                </a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
